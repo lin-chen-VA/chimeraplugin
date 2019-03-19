@@ -1,9 +1,11 @@
 #!/usr/bint/python
 
+import os
 import Tkinter as tk
 from tkFont import Font
 from chimera import runCommand as rc
 import control
+import model
 
 class anomalyGUI(object):
 
@@ -51,6 +53,10 @@ class anomalyGUI(object):
         self.current_chain = self.variable.get()
         self.current_threhold = self.entry.get()
         self.mol_name = control.getMolName()
+
+        os.chdir(os.path.dirname(os.path.realpath(__file__))) # change the working directory, the default directory is root which is not writable
+        self.labels = model.detect('5a1a', 10)
+        print(self.labels)
 
         # Chimera display
         rc('color blue')
