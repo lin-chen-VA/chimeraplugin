@@ -91,24 +91,6 @@ def getLabels(labels, chain):
 
     return s
 
-def getLabelsInTable(labels, chain):
-    """Get the informaiton of labeled residues
-
-    Args:
-        labels: infor returned from model
-        chain: selected chain ID
-
-    Returns:
-        list: a list of information of labeled residues in the selected chain
-    """
-    l = []
-
-    for label in labels:
-        if label[1] == chain:
-            l.append(label)
-
-    return l
-
 def validResidue(name):
     """Convert three-letters name to single-letter name
     """
