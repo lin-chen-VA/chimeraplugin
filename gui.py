@@ -62,22 +62,45 @@ class anomalyGUI(object):
         print(self.labels)
 
         # Chimera display
-        rc('color blue')
+        rc('color blue') # display whole molecule as blue
 
         # add components into frame2
 
         tk.mainloop()
 
+    def display_labels(self):
+        # display the labeled residues as yellow in Chimera window
+        if len(self.labels) == 0:
+            return
+        rc('select '+control.getLabels(self.labels, self.current_chain))
+        rc('color yellow sel')
+        rc('show sel')
+        # display the labeled residues on chain
+        self.color_labels = control.getLabeledResidueInChain(self.labels, self.current_chain, self.residues)
+        #print 'Labels: ', self.color_labels
+        for index in self.color_labels:
+            self.residue_labels[index].config(bg = "yellow", relief = "sunken")
+
+        # display labeled residues in Chimera window
+        command = 'select '
+        for r in self.color_labels:
+            r = self.residues[r]
+            command += ':'+str(r[0])+'.'+self.current_chain
+        rc(command)
+        rc('color yellow sel')
+        rc('show sel')
+
     def update(self):
         self.current_chain = self.variable.get() # udpate selected chain
         self.residue_labels = None
         self.selected_residues = None
-        self.clear_chain() # remove all residue buttons in frame2
-        self.add_residues() # add residue buttons for selected chain
         rc('preset apply interactive 1')
         rc('color blue')
         rc('~show')
         rc('~sel')
+        self.clear_chain() # remove all residue buttons in frame2
+        self.add_residues() # add residue buttons for selected chain
+        self.display_labels()
 
     def clear_chain(self):
         for widget in self.frame2.winfo_children():
@@ -96,19 +119,35 @@ class anomalyGUI(object):
             #print(index, info)
             rowIndex = int(index/number_line)
             columnIndex = index - rowIndex*number_line
-            l = tk.Label(self.frame2, text = info, bg = "SlateGray2", fg = "blue4",  font = Font(family = "Times", size = 8), justify = "left")
+            l = tk.Label(self.frame2, text = info, bg = "SlateGray2", fg = "blue4",  font = Font(family = "Times", size = 6), justify = "left")
             l.place(x =5+columnIndex*label_width, y = (label_height+line_space)*rowIndex, height = label_height, width = label_width, anchor = "nw")
-            l.bind('<Button-1>', lambda event, n = index : self.show_residue(event, n))
+            l.bind('<Button-1>', lambda event, n = r[0], i = index : self.show_residue(event, n, i))
             self.residue_labels.append(l)
 
-    def show_residue(self, event, n):
+    def show_residue(self, event, n, index):
+        """Color selected residue
+
+        Args:
+            n, residue index in cif file
+            index, residue index started from 0
+        """
+        # display the selected residues
         self.selected_residues.append(n) # append select residue to selected container
         command = 'select '
         for s in self.selected_residues:
             command += ':'+str(s)+'.'+self.current_chain
-        self.residue_labels[n].config(bg = "SlateGray3", relief = "sunken")
+        self.residue_labels[index].config(bg = "SlateGray3", relief = "sunken")
         rc(command)
         rc('color red sel')
+
+        # display selectee residues and labeled residues in Chimera window
+        command = 'select '
+        for r in self.color_labels:
+            r = self.residues[r]
+            command += ':'+str(r[0])+'.'+self.current_chain
+        for s in self.selected_residues:
+            command += ':'+str(s)+'.'+self.current_chain
+        rc(command)
         rc('show sel')
 
 def main():

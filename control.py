@@ -43,16 +43,53 @@ def getResidueInChain(chain):
 
     return r
 
+def getLabeledResidueInChain(labels, chain, residues):
+    """Get the indies of labeled residue in chain started from 0
+
+    Args:
+        labels: labeled residues
+        chain: selected chain
+        residue_labels (list), residues in chain
+
+    Returns:
+        list: indies of labeled residues in residue_labels
+    """
+    l = []
+    for index, residue in enumerate(residues):
+        for label in labels:
+            if label[1] == chain and label[2] == residue[0]:
+                l.append(index)
+
+    return l
+
 def residueSingleLetter(name):
     """Convert three-letters name to single-letter name
     """
     d = {'ALA': 'A', 'ARG': 'R', 'ASN': 'N', 'ASP': 'D', 'CYS': 'C', 'GLU': 'E', 'GLN': 'Q', 'GLY': 'G', 'HIS': 'H', 'ILE': 'I', 'LEU': 'L', 'LYS': 'K', 'MET': 'M', 'PHE': 'F', 'PRO': 'P', 'SER': 'S', 'THR': 'T', 'TRP': 'W', 'TYR': 'Y', 'VAL': 'V'}
 
     if name in d:
-        print name
+        #print name
         return d[name]
     else:
         return '-'
+
+def getLabels(labels, chain):
+    """Get the labeled residue in the specified chain
+
+    Args:
+        labels, info returned from model
+        chain, chain ID
+
+    Returns:
+        string, labeled chain for chimera display
+    """
+    s = ''
+
+    for label in labels:
+        if label[1] == chain:
+            s += ':'+str(label[2])+'.'+chain+' '
+
+    return s
 
 def validResidue(name):
     """Convert three-letters name to single-letter name
