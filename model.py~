@@ -735,7 +735,9 @@ def processFile(fileName, residueList, dataSetXR, threshold):
     chains = getChains(fileName);
     # Process each chain in the protein
     for chain in chains:
+        print 'Process chains ...'
         residues = getResidues(chain);
+        print len(residues)
         outputs = outputs + getRotamer(residues, residueList, dataSetXR, threshold);
         #break; # process the first chain in a protein model
 
@@ -785,6 +787,8 @@ def loadData(dataDir):
 def detect(pdbID,  threshold):
     p = os.path.dirname(os.path.realpath(__file__))
     dataSetXR = loadData(os.path.join(p, 'Analysis'))
+
+    print('Data:', len(dataSetXR))
 
     # download cif file
     pdbl = PDBList()
