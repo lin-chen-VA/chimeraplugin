@@ -1,5 +1,6 @@
 ## Visualization Tool for Protein Validation in Chimera Platform
 
+![Snapshot] (./snapshot.png)
 #### Install Biopython in Chimera
 
 * Download [biopython](https://biopython.org/wiki/Download)
@@ -9,7 +10,7 @@
 
 #### Install Tool in Chimera
 
-* python install /Applications/Chimera.app
+* python install.py /Applications/Chimera.app
 
 #### Implementation
 
